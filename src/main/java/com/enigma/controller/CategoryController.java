@@ -2,10 +2,14 @@ package com.enigma.controller;
 
 import com.enigma.entity.Category;
 import com.enigma.entity.request.category.CategoryRequest;
+import com.enigma.entity.response.ErrorResponse;
 import com.enigma.entity.response.PagingResponse;
 import com.enigma.entity.response.SuccessResponse;
+import com.enigma.exception.UnauthorizedException;
 import com.enigma.service.ICategoryService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -21,6 +25,8 @@ public class CategoryController {
     private ICategoryService categoryService;
 
     private ModelMapper modelMapper;
+    private Logger logger = LoggerFactory.getLogger(CategoryController.class);
+
 
     @Autowired
     public CategoryController(ICategoryService categoryService, ModelMapper modelMapper) {
@@ -73,6 +79,12 @@ public class CategoryController {
     public ResponseEntity findByIdCategory(@PathVariable("id") String id) throws Exception {
         Optional<Category> price = categoryService.getById(id);
         return ResponseEntity.status(HttpStatus.FOUND).body(new SuccessResponse<>("Success get product By id", price));
+    }
+
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ResponseEntity handleUnauthorizedException(UnauthorizedException exception) {
+        logger.error(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("500", exception.getMessage()));
     }
 
 }

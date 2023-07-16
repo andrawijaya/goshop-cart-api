@@ -14,8 +14,11 @@ public class VendorRequest {
     private String vendorName;
 
     @Getter @Setter
-    private CategoryIdRequest category;
+    private String address;
 
     @Getter @Setter
-    private PriceIdRequest price;
+    private String state;
+
+    @Getter @Setter
+    private String city;
 }

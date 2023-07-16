@@ -28,24 +28,23 @@ public class Vendor {
     @Getter @Setter
     private String vendorName;
 
+    @Column(name = "address", nullable = false , length = 100)
+    @Getter @Setter
+    private String address;
+
+    @Column(name = "state", nullable = false , length = 100)
+    @Getter @Setter
+    private String state;
+
+    @Column(name = "city", nullable = false , length = 100)
+    @Getter @Setter
+    private String city;
+
     @LazyCollection(LazyCollectionOption.FALSE)
     @OneToMany(mappedBy = "vendor", fetch = FetchType.EAGER)
     @JsonBackReference
     @Setter @Getter
-    private Set<Product> productList;
+    private Set<ProductInventory> productInventories;
 
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
-    @JsonManagedReference
-    @Setter @Getter
-    private Category category;
-
-    @ToString.Exclude
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "price_id", referencedColumnName = "price_id", nullable = false)
-    @JsonManagedReference
-    @Setter @Getter
-    private Price price;
 
 }

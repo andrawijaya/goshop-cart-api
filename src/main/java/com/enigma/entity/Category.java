@@ -31,6 +31,7 @@ public class Category {
     @OneToMany(mappedBy = "category")
     @JsonBackReference
     @Setter @Getter
-    private List<Vendor> vendorList;
+    private List<Product> productList;
+
 }
 

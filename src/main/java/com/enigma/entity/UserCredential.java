@@ -1,60 +1,37 @@
 package com.enigma.entity;
 
+import com.enigma.util.Role;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 
+@ToString
+@Setter @Getter
+@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 @Entity
-@Table(name = "m_customer")
+@Table(name = "m_auth")
 public class UserCredential {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-
-    @Column(name = "name", nullable = false, length = 50)
-    private String name;
-
-    @Column(name = "email", nullable = false, length = 100)
+    @Column(name = "email")
     private String email;
 
-    public UserCredential(){
+    @Column(name = "password", nullable = false, length = 100)
+    private String password;
 
-    }
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false)
+    private Role role;
 
-    public UserCredential(String name, String email){
-        this.name = name;
-        this.email = email;
-    }
+    @ToString.Exclude
+    @JsonBackReference
+    @OneToOne(mappedBy = "userCredential")
+    private Customer customer;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    @Override
-    public String toString() {
-        return "Customer{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                '}';
-    }
 }

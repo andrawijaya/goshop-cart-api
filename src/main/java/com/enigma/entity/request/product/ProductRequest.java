@@ -1,4 +1,5 @@
 package com.enigma.entity.request.product;
+import com.enigma.entity.request.category.CategoryIdRequest;
 import com.enigma.entity.request.price.PriceIdRequest;
 import com.enigma.entity.request.vendor.VendorIdRequest;
 import lombok.Getter;
@@ -15,9 +16,12 @@ public class ProductRequest {
     private String productName;
 
     @Getter @Setter
-    private VendorIdRequest vendor;
+    private String productDescription;
 
     @Getter @Setter
-    private PriceIdRequest price;
+    private CategoryIdRequest category;
+
+    @Getter @Setter
+    private PriceIdRequest vendorPrice;
 
 }

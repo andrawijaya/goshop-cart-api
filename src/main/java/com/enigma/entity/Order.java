@@ -1,9 +1,8 @@
 package com.enigma.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -12,28 +11,30 @@ import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.Date;
 import java.util.Set;
 
 @ToString
 @Entity
-@Table(name = "m_product")
-public class Product {
+@Table(name = "m_order")
+public class Order {
     @Id
     @GeneratedValue(generator = "system-uuid")
     @GenericGenerator(name = "system-uuid", strategy = "uuid2")
-    @Column(name = "product_code")
+    @Column(name = "order_id")
     @Getter
     @Setter
-    private String productCode;
+    private String orderId;
 
     @Column(name = "product_name", nullable = false, length = 100)
     @Getter @Setter
-    private String productName;
+    private int quantity;
 
-    @Column(name = "product_description", nullable = false, length = 100)
+    @Column(name = "order_date")
     @Getter @Setter
-    private String productDescription;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    @Temporal(TemporalType.DATE)
+    private Date orderDate;
 
 //    @ToString.Exclude
 //    @ManyToOne(fetch = FetchType.EAGER)
@@ -44,22 +45,17 @@ public class Product {
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "category_id", referencedColumnName = "category_id", nullable = false)
+    @JoinColumn(name = "product_inventoryId", referencedColumnName = "id", nullable = false)
     @JsonManagedReference
     @Setter @Getter
-    private Category category;
+    private ProductInventory productInventory;
 
     @ToString.Exclude
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "price_id", referencedColumnName = "price_id", nullable = false)
+    @JoinColumn(name = "customer_id", referencedColumnName = "customer_id", nullable = false)
     @JsonManagedReference
     @Setter @Getter
-    private Price vendorPrice;
+    private Customer customer;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    @JsonBackReference
-    @Setter @Getter
-    private Set<ProductInventory> productInventories;
 
 }

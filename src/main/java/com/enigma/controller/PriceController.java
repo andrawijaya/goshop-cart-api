@@ -2,10 +2,14 @@ package com.enigma.controller;
 
 import com.enigma.entity.Price;
 import com.enigma.entity.request.price.PriceRequest;
+import com.enigma.entity.response.ErrorResponse;
 import com.enigma.entity.response.PagingResponse;
 import com.enigma.entity.response.SuccessResponse;
+import com.enigma.exception.UnauthorizedException;
 import com.enigma.service.IPriceService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -19,6 +23,9 @@ import java.util.Optional;
 @RequestMapping("/prices")
 public class PriceController {
     private IPriceService priceService;
+
+    private Logger logger = LoggerFactory.getLogger(PriceController.class);
+
 
     private ModelMapper modelMapper;
 
@@ -71,5 +78,11 @@ public class PriceController {
     public ResponseEntity findByIdCategory(@PathVariable("id") String id) throws Exception {
         Optional<Price> price = priceService.getById(id);
         return ResponseEntity.status(HttpStatus.FOUND).body(new SuccessResponse<>("Success get price By id", price));
+    }
+
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ResponseEntity handleUnauthorizedException(UnauthorizedException exception) {
+        logger.error(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("500", exception.getMessage()));
     }
 }

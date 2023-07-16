@@ -6,8 +6,11 @@ import com.enigma.entity.response.ErrorResponse;
 import com.enigma.entity.response.PagingResponse;
 import com.enigma.entity.response.SuccessResponse;
 import com.enigma.exception.NotFoundException;
+import com.enigma.exception.UnauthorizedException;
 import com.enigma.service.IVendorService;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -23,6 +26,9 @@ import java.util.Optional;
 @RequestMapping("/vendors")
 public class VendorController {
     private IVendorService vendorService;
+
+    private Logger logger = LoggerFactory.getLogger(VendorController.class);
+
 
     private ModelMapper modelMapper;
 
@@ -76,6 +82,12 @@ public class VendorController {
     public ResponseEntity getByFilterVendor(@RequestParam @NotBlank(message = "invalid keyword required") String keyword, @RequestParam String value) throws Exception {
         List<Vendor> result = vendorService.getByFilter(keyword, value);
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse<>("Success get product by " + keyword, result));
+    }
+
+    @ExceptionHandler(value = UnauthorizedException.class)
+    public ResponseEntity handleUnauthorizedException(UnauthorizedException exception) {
+        logger.error(exception.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ErrorResponse("500", exception.getMessage()));
     }
 
 }

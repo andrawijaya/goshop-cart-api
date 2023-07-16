@@ -9,6 +9,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "m_price")
@@ -25,15 +26,21 @@ public class Price {
     @Getter @Setter
     private int productPrice;
 
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "price", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonBackReference
-    @Setter @Getter
-    private List<Vendor> vendorList;
+//    @LazyCollection(LazyCollectionOption.FALSE)
+//    @OneToMany(mappedBy = "price", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+//    @JsonBackReference
+//    @Setter @Getter
+//    private List<Vendor> vendorList;
 
     @LazyCollection(LazyCollectionOption.FALSE)
-    @OneToMany(mappedBy = "price")
+    @OneToMany(mappedBy = "vendorPrice")
     @JsonBackReference
     @Setter @Getter
     private List<Product> productList;
+
+    @LazyCollection(LazyCollectionOption.FALSE)
+    @OneToMany(mappedBy = "productUnit", fetch = FetchType.EAGER)
+    @JsonBackReference
+    @Setter @Getter
+    private Set<ProductInventory> productInventories;
 }

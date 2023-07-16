@@ -25,16 +25,16 @@ public class ProductService implements IProductService{
 
     private IProductRepository productRepository;
 
-    private IVendorService vendorService;
+    private ICategoryService categoryService;
 
     private IPriceService priceService;
 
     private ModelMapper modelMapper;
 
-    public ProductService(IProductRepository productRepository, ModelMapper modelMapper, IVendorService vendorService, IPriceService priceService){
+    public ProductService(IProductRepository productRepository, ModelMapper modelMapper, ICategoryService categoryService, IPriceService priceService){
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
-        this.vendorService = vendorService;
+        this.categoryService = categoryService;
         this.priceService = priceService;
     }
 
@@ -68,11 +68,11 @@ public class ProductService implements IProductService{
     @Override
     public Product create(Product data) throws Exception {
         try {
-            Optional<Vendor> newVendor = vendorService.getById(data.getVendor().getVendorId());
-            Optional<Price> newPrice = priceService.getById(data.getPrice().getPriceId());
+            Optional<Category> newCategory = categoryService.getById(data.getCategory().getCategoryId());
+            Optional<Price> newPrice = priceService.getById(data.getVendorPrice().getPriceId());
 
-            data.setVendor(newVendor.get());
-            data.setPrice(newPrice.get());
+            data.setCategory(newCategory.get());
+            data.setVendorPrice(newPrice.get());
             Product newProduct = productRepository.save(data);
             return newProduct;
         } catch (DataIntegrityViolationException e) {
@@ -103,18 +103,12 @@ public class ProductService implements IProductService{
     public void update(Product data, String id) throws Exception {
         try {
             Product existingProduct = getById(id).get();
-            Optional<Vendor> getVendor = vendorService.getById(data.getVendor().getVendorId());
-            if(getVendor.isEmpty()){
-                throw new NotFoundException("Id Vendor is not found");
-            }
+            Optional<Category> getCategory = categoryService.getById(data.getCategory().getCategoryId());
+            Optional<Price> getPrice = priceService.getById(data.getVendorPrice().getPriceId());
 
-            Optional<Price> getPrice = priceService.getById(data.getPrice().getPriceId());
-            if(getPrice.isEmpty()){
-                throw new NotFoundException("Id Price is not found");
-            }
 
-            data.setVendor(getVendor.get());
-            data.setPrice(getPrice.get());
+            data.setCategory(getCategory.get());
+            data.setVendorPrice(getPrice.get());
             modelMapper.map(data, existingProduct);
             productRepository.save(existingProduct);
         } catch (Exception e) {

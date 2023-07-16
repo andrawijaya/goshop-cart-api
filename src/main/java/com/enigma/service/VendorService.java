@@ -65,18 +65,18 @@ public class VendorService implements IVendorService {
     @Override
     public Vendor create(Vendor data) throws Exception {
         try {
-            Optional<Category> getCategory = categoryService.getById(data.getCategory().getCategoryId());
-            if(getCategory.isEmpty()){
-                throw new NotFoundException("Id Category is not found");
-            }
-
-            Optional<Price> getPrice = priceService.getById(data.getPrice().getPriceId());
-            if(getPrice.isEmpty()){
-                throw new NotFoundException("Id Price is not found");
-            }
-
-            data.setCategory(getCategory.get());
-            data.setPrice(getPrice.get());
+//            Optional<Category> getCategory = categoryService.getById(data.getCategory().getCategoryId());
+//            if(getCategory.isEmpty()){
+//                throw new NotFoundException("Id Category is not found");
+//            }
+//
+//            Optional<Price> getPrice = priceService.getById(data.getPrice().getPriceId());
+//            if(getPrice.isEmpty()){
+//                throw new NotFoundException("Id Price is not found");
+//            }
+//
+//            data.setCategory(getCategory.get());
+//            data.setPrice(getPrice.get());
             Vendor newVendor = vendorRepository.save(data);
             return newVendor;
         } catch (DataIntegrityViolationException e) {
@@ -107,11 +107,11 @@ public class VendorService implements IVendorService {
     public void update(Vendor data, String id) throws Exception {
         try {
             Vendor existingVendor = getById(id).get();
-            Optional<Category> getCategory = categoryService.getById(data.getCategory().getCategoryId());
-            Optional<Price> getPrice = priceService.getById(data.getPrice().getPriceId());
-
-            data.setCategory(getCategory.get());
-            data.setPrice(getPrice.get());
+//            Optional<Category> getCategory = categoryService.getById(data.getCategory().getCategoryId());
+//            Optional<Price> getPrice = priceService.getById(data.getPrice().getPriceId());
+//
+//            data.setCategory(getCategory.get());
+//            data.setPrice(getPrice.get());
             modelMapper.map(data, existingVendor);
             vendorRepository.save(existingVendor);
         } catch (Exception e) {
